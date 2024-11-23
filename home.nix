@@ -73,4 +73,11 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  programs.bat.enable = true;
+
+  programs.eza = {
+    enable = true;
+    icons = "always";
+  };
 }

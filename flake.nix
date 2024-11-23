@@ -18,8 +18,8 @@
       # $ darwin-rebuild build --flake .#Jasons-MacBook-Pro
       "Jasons-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
-        modules = [ 
-          ./darwin.nix 
+        modules = [
+          ./darwin.nix
           home-manager.darwinModules.home-manager
           {
             home-manager = {
@@ -27,9 +27,10 @@
               useUserPackages = true;
               users.jason = import ./home.nix;
             };
-            users.users.jason.home = "/Users/jason";
+            users.users.jason.home =
+              "/Users/jason"; # https://github.com/nix-community/home-manager/issues/4026
           }
-          ];
+        ];
         specialArgs = { inherit inputs; };
       };
 
