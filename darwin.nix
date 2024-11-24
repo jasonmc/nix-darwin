@@ -33,7 +33,7 @@
     pkgs.btop
     pkgs.mdcat
     pkgs.du-dust
-    pkgs.oh-my-fish
+    #pkgs.oh-my-fish
     pkgs.pwgen
     pkgs.procs
     pkgs.bottom
@@ -80,7 +80,6 @@
     pkgs.fsrx
     pkgs.jless
     pkgs.wthrr
-    pkgs.fishPlugins.grc
     pkgs.grc
     pkgs.openssh
     pkgs.any-nix-shell

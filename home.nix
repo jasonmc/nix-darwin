@@ -80,4 +80,34 @@
     enable = true;
     icons = "always";
   };
+
+  programs.broot = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+
+    '';
+    functions = { fish_greeting = ""; };
+    plugins = [
+      {
+        name = "grc";
+        src = pkgs.fishPlugins.grc.src;
+      }
+
+      {
+        name = "bobthefish";
+        src = pkgs.fetchFromGitHub {
+          owner = "oh-my-fish";
+          repo = "theme-bobthefish";
+          rev = "e3b4d4eafc23516e35f162686f08a42edf844e40";
+          hash = "sha256-cXOYvdn74H4rkMWSC7G6bT4wa9d3/3vRnKed2ixRnuA=";
+        };
+      }
+    ];
+  };
 }
