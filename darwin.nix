@@ -95,9 +95,10 @@
   # Use a custom configuration.nix location.
   environment.darwinConfig = "$HOME/code/nix-darwin";
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
+  ids.gids.nixbld = 30000;
+
   nix = {
+    enable = true;
     package = pkgs.nix;
     settings = { "extra-experimental-features" = [ "nix-command" "flakes" ]; };
   };
