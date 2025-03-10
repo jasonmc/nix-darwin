@@ -48,7 +48,7 @@
     pkgs.eza
     pkgs.lsd
     pkgs.bat
-    pkgs.emacs29
+    pkgs.emacs
     pkgs.tree
     pkgs.fd
     pkgs.wget
