@@ -88,6 +88,8 @@
     pkgs.dua
     pkgs.nixfmt-classic
     pkgs.statix
+    pkgs.utm
+    pkgs.rectangle
   ];
 
   fonts = { packages = [ pkgs.jetbrains-mono pkgs.noto-fonts ]; };
