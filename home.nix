@@ -160,4 +160,25 @@
       };
     };
   };
+
+  programs.wezterm = {
+    enable = true;
+
+    extraConfig = ''
+      local wezterm = require "wezterm"
+
+      function scheme_for_appearance(appearance)
+         if appearance:find "Dark" then
+            return "OneDark (base16)"
+         else
+            return "OneLight (Gogh)"
+         end
+      end
+
+      return {
+         window_background_opacity = 0.95,
+         color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
+      }
+    '';
+  };
 }
