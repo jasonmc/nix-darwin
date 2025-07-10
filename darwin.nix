@@ -109,6 +109,8 @@
     fish.enable = true; # Enable alternative shell support in nix-darwin.
   };
 
+  system.primaryUser = "jason";
+
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 5;
