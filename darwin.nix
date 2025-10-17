@@ -55,7 +55,7 @@
     pkgs.gron
     pkgs.tor
     pkgs.haskell-language-server
-    pkgs.tealdeer
+    # pkgs.tealdeer
     pkgs.nushell
     pkgs.rust-petname
     pkgs.httpie
