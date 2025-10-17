@@ -181,4 +181,8 @@
       }
     '';
   };
+
+  programs.codex = {
+    enable = true;
+  };
 }
