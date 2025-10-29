@@ -90,6 +90,7 @@
     pkgs.statix
     pkgs.utm
     pkgs.rectangle
+    pkgs.dysk
   ];
 
   fonts = { packages = [ pkgs.jetbrains-mono pkgs.noto-fonts ]; };
