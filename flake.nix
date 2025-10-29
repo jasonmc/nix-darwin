@@ -9,9 +9,13 @@
     };
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-rosetta-builder = {
+      url = "github:cpick/nix-rosetta-builder";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs, }: {
+  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs, nix-rosetta-builder, }: {
 
     darwinConfigurations = {
       # Build darwin flake using:
@@ -19,6 +23,15 @@
       "Jasons-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
+          # { nix.linux-builder.enable = true; }
+          nix-rosetta-builder.darwinModules.default
+          {
+            # see available options in module.nix's `options.nix-rosetta-builder`
+            nix-rosetta-builder = {
+              enable = true;
+              onDemand = true;
+            };
+          }
           ./darwin.nix
           home-manager.darwinModules.home-manager
           {
