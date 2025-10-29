@@ -32,7 +32,7 @@
     pkgs.bottom
     pkgs.btop
     pkgs.mdcat
-    pkgs.du-dust
+    pkgs.dust
     #pkgs.oh-my-fish
     pkgs.pwgen
     pkgs.procs

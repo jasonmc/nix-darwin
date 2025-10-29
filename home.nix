@@ -122,42 +122,40 @@
 
   programs.git = {
     enable = true;
-    userName = "Jason McCandless";
-    userEmail = "me@jasonmc.net";
-
-    aliases = {
-      st    = "status -sb";
-      br    = "branch";
-      co    = "checkout";
-      ci    = "commit";
-      hist  = "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short";
-      type  = "cat-file -t";
-      dump  = "cat-file -p";
-      lg1   = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all";
-      lg2   = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'";
-      lg    = "lg1";
-    };
-
-    difftastic = {
-      enableAsDifftool = true;
-    };
-
-    delta = {
-      enable = true;
-      options = {
-        navigate = true;
+    settings = {
+      user = {
+        name = "Jason McCandless";
+        email = "me@jasonmc.net";
       };
-    };
-
-    extraConfig = {
+      alias = {
+        st    = "status -sb";
+        br    = "branch";
+        co    = "checkout";
+        ci    = "commit";
+        hist  = "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short";
+        type  = "cat-file -t";
+        dump  = "cat-file -p";
+        lg1   = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all";
+        lg2   = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'";
+        lg    = "lg1";
+      };
       init.defaultBranch = "master";
       push.default = "current";
-
       core.editor = "emacsclient -t -a=emacs";
+      merge.conflictstyle = "zdiff3";
+    };
+  };
 
-      merge = {
-        conflictstyle = "zdiff3";
-      };
+  programs.difftastic = {
+    enable = true;
+    git.diffToolMode = "difftool";
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      navigate = true;
     };
   };
 
