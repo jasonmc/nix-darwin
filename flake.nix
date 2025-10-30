@@ -13,9 +13,13 @@
       url = "github:cpick/nix-rosetta-builder";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    fixepub = {
+      url = "github:jasonmc/fixepub";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs, nix-rosetta-builder, }: {
+  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs, nix-rosetta-builder, fixepub, ... }: {
 
     darwinConfigurations = {
       # Build darwin flake using:
@@ -31,6 +35,13 @@
               enable = true;
               onDemand = true;
             };
+          }
+          {
+            nixpkgs.overlays = [
+              (final: prev: {
+                fixepub = fixepub.packages.${final.system}.default;
+              })
+            ];
           }
           ./darwin.nix
           home-manager.darwinModules.home-manager
