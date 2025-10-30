@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -153,7 +153,8 @@
       };
       init.defaultBranch = "master";
       push.default = "current";
-      core.editor = "emacsclient -t -a=emacs";
+      core.editor =
+        "${lib.getExe' pkgs.emacs "emacsclient"} -t -a ${lib.getExe pkgs.emacs}";
       merge.conflictstyle = "zdiff3";
     };
   };
