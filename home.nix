@@ -92,7 +92,19 @@
       ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
 
     '';
-    functions = { fish_greeting = ""; };
+    functions = {
+      fish_greeting = "";
+      nxs = ''
+          test (count $argv) -eq 0; and echo "usage: nxs pkg [pkg ...]"; and return 1
+          set pkgs
+          for a in $argv
+            set pkgs $pkgs nixpkgs#$a
+          end
+          set -l names (string join " " $argv)
+          nix shell $pkgs --command env IN_NIX_SHELL=impure ANY_NIX_SHELL_PKGS="$names" $SHELL -l
+      '';
+
+    };
     shellAliases = { moon = "${pkgs.curlMinimal}/bin/curl -s wttr.in/Moon"; };
     plugins = [
       {
