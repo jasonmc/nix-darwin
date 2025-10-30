@@ -91,6 +91,7 @@
     pkgs.utm
     pkgs.rectangle
     pkgs.dysk
+    pkgs.gdu
   ];
 
   fonts = { packages = [ pkgs.jetbrains-mono pkgs.noto-fonts ]; };
