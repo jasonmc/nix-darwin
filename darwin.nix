@@ -105,6 +105,20 @@
     enable = true;
     package = pkgs.nix;
     settings = { "extra-experimental-features" = [ "nix-command" "flakes" ]; };
+
+    gc = {
+      automatic = true;
+      # Run every day at 03:15
+      interval = { Hour = 3; Minute = 15; };
+      # Keep only generations newer than 14 days
+      options = "--delete-older-than 14d";
+    };
+
+    optimise = {
+      automatic = true;
+      # Stagger to 04:00 to avoid overlap with GC
+      interval = { Hour = 4; Minute = 0; };
+    };
   };
 
   programs = {
