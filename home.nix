@@ -198,4 +198,13 @@
   programs.codex = {
     enable = true;
   };
+
+  programs.television = {
+    enable = true;
+  };
+
+  programs.nix-search-tv = {
+    enable = true;
+  };
+  
 }
