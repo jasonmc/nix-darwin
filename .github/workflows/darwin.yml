@@ -27,4 +27,4 @@ jobs:
         echo -e "run\tprivate/var/run" | sudo tee -a /etc/synthetic.conf >/dev/null
         /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t &>/dev/null || true
         # Build macos-desktop output
-        nix build .#darwinConfigurations."Jasons-MacBook-Pro".system
+        nix build .#darwinConfigurations."Jasons-MacBook-Pro-noRosetta".system

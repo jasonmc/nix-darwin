@@ -19,44 +19,52 @@
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs, nix-rosetta-builder, fixepub, ... }: {
+  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs, nix-rosetta-builder, fixepub, ... }:
+    let
+      rosettaModules = [
+        # { nix.linux-builder.enable = true; }
+        nix-rosetta-builder.darwinModules.default
+        {
+          # see available options in module.nix's `options.nix-rosetta-builder`
+          nix-rosetta-builder = {
+            enable = true;
+            onDemand = true;
+          };
+        }
+      ];
+      baseModules = [
+        {
+          nixpkgs.overlays = [
+            (final: prev: {
+              fixepub = fixepub.packages.${final.system}.default;
+            })
+          ];
+        }
+        ./darwin.nix
+        home-manager.darwinModules.home-manager
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            users.jason = import ./home.nix;
+          };
+          users.users.jason.home =
+            "/Users/jason"; # https://github.com/nix-community/home-manager/issues/4026
+        }
+      ];
+      mkDarwin = { extraModules ? [] }:
+        nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          modules = baseModules ++ extraModules;
+          specialArgs = { inherit inputs; };
+        };
+    in {
 
     darwinConfigurations = {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#Jasons-MacBook-Pro
-      "Jasons-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        modules = [
-          # { nix.linux-builder.enable = true; }
-          nix-rosetta-builder.darwinModules.default
-          {
-            # see available options in module.nix's `options.nix-rosetta-builder`
-            nix-rosetta-builder = {
-              enable = true;
-              onDemand = true;
-            };
-          }
-          {
-            nixpkgs.overlays = [
-              (final: prev: {
-                fixepub = fixepub.packages.${final.system}.default;
-              })
-            ];
-          }
-          ./darwin.nix
-          home-manager.darwinModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.jason = import ./home.nix;
-            };
-            users.users.jason.home =
-              "/Users/jason"; # https://github.com/nix-community/home-manager/issues/4026
-          }
-        ];
-        specialArgs = { inherit inputs; };
-      };
+      "Jasons-MacBook-Pro" = mkDarwin {extraModules = rosettaModules; };
+      "Jasons-MacBook-Pro-noRosetta" = mkDarwin {  };
 
       # Expose the package set, including overlays, for convenience.
       darwinPackages = self.darwinConfigurations."Jasons-MacBook-Pro".pkgs;
