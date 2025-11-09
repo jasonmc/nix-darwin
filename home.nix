@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -36,7 +36,6 @@
     # '')
 
     pkgs.fixepub
-    inputs.self.packages.${pkgs.system}.syncFlakeLockFromDarwin
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -76,6 +75,8 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  programs.syncFlakeLockFromDarwin.enable = true;
 
   programs.bat.enable = true;
 

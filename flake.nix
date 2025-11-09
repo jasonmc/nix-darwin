@@ -23,20 +23,8 @@
     let
       system = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages.${system};
-      syncScript = builtins.readFile ./sync-flake-lock-from-darwin.sh;
-      syncFlakeLockFromDarwin = pkgs.writeShellApplication {
-        name = "sync-flake-lock-from-darwin";
-        text = builtins.replaceStrings
-          [
-            "__SYNC_FROM_DARWIN_LOCK__"
-            "__CENTRAL_LOCK_PATH__"
-          ]
-          [
-            "${./sync-from-darwin-lock.nix}"
-            "${self}/flake.lock"
-          ]
-          syncScript;
-      };
+      syncHelper = import ./modules/sync-flake-lock-from-darwin.nix { inherit inputs; };
+      syncFlakeLockFromDarwin = syncHelper.mkPackage pkgs;
       rosettaModules = [
         # { nix.linux-builder.enable = true; }
         nix-rosetta-builder.darwinModules.default
@@ -62,6 +50,7 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            sharedModules = [ syncHelper.module ];
             users.jason = import ./home.nix;
           };
           users.users.jason.home =
