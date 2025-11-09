@@ -21,6 +21,22 @@
 
   outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs, nix-rosetta-builder, fixepub, ... }:
     let
+      system = "aarch64-darwin";
+      pkgs = nixpkgs.legacyPackages.${system};
+      syncScript = builtins.readFile ./sync-flake-lock-from-darwin.sh;
+      syncFlakeLockFromDarwin = pkgs.writeShellApplication {
+        name = "sync-flake-lock-from-darwin";
+        text = builtins.replaceStrings
+          [
+            "__SYNC_FROM_DARWIN_LOCK__"
+            "__CENTRAL_LOCK_PATH__"
+          ]
+          [
+            "${./sync-from-darwin-lock.nix}"
+            "${self}/flake.lock"
+          ]
+          syncScript;
+      };
       rosettaModules = [
         # { nix.linux-builder.enable = true; }
         nix-rosetta-builder.darwinModules.default
@@ -54,13 +70,14 @@
       ];
       mkDarwin = { extraModules ? [] }:
         nix-darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
+          inherit system;
           modules = baseModules ++ extraModules;
           specialArgs = { inherit inputs; };
         };
     in {
+      packages.${system}.syncFlakeLockFromDarwin = syncFlakeLockFromDarwin;
 
-    darwinConfigurations = {
+      darwinConfigurations = {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#Jasons-MacBook-Pro
       "Jasons-MacBook-Pro" = mkDarwin {extraModules = rosettaModules; };
