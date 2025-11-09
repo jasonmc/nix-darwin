@@ -1,27 +1,11 @@
 { inputs }:
 
 let
-  lockEvaluatorText = ''
-    { centralLockPath, targetFlakeDir }:
-
-    let
-      inherit (builtins) readFile fromJSON toJSON;
-
-      centralLock = fromJSON (readFile centralLockPath);
-      targetLock  = fromJSON (readFile (targetFlakeDir + "/flake.lock"));
-
-      newLock = targetLock // {
-        nodes = targetLock.nodes // {
-          nixpkgs = centralLock.nodes.nixpkgs;
-        };
-      };
-    in
-    toJSON newLock
-  '';
+  selfPath = inputs.self.outPath or (builtins.toString inputs.self);
 
   mkPackage = pkgs:
     let
-      lockEvaluator = pkgs.writeText "sync-from-darwin-lock.nix" lockEvaluatorText;
+      jq = pkgs.jq;
       scriptText = ''
         set -euo pipefail
 
@@ -34,12 +18,13 @@ let
         fi
 
         tmp="$TARGET_DIR/flake.lock.tmp"
+        target_lock="$TARGET_DIR/flake.lock"
+        central_lock="${selfPath}/flake.lock"
 
-        nix eval --raw \
-          --file ${lockEvaluator} \
-          --argstr centralLockPath "${inputs.self}/flake.lock" \
-          --argstr targetFlakeDir "$TARGET_DIR" \
-          > "$tmp"
+        ${jq}/bin/jq \
+          --slurpfile central "$central_lock" \
+          '.nodes.nixpkgs = $central[0].nodes.nixpkgs' \
+          "$target_lock" > "$tmp"
 
         mv "$tmp" "$TARGET_DIR/flake.lock"
 
