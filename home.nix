@@ -36,6 +36,7 @@
     # '')
 
     pkgs.fixepub
+    pkgs.syncFlakeLockFromDarwin
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -75,8 +76,6 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  programs.syncFlakeLockFromDarwin.enable = true;
 
   programs.bat.enable = true;
 

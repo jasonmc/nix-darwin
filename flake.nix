@@ -22,9 +22,13 @@
   outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs, nix-rosetta-builder, fixepub, ... }:
     let
       system = "aarch64-darwin";
-      pkgs = nixpkgs.legacyPackages.${system};
       syncHelper = import ./modules/sync-flake-lock-from-darwin.nix { inherit inputs; };
-      syncFlakeLockFromDarwin = syncHelper.mkPackage pkgs;
+      overlays = [
+        syncHelper.overlay
+        (final: prev: {
+          fixepub = fixepub.packages.${final.system}.default;
+        })
+      ];
       rosettaModules = [
         # { nix.linux-builder.enable = true; }
         nix-rosetta-builder.darwinModules.default
@@ -37,20 +41,13 @@
         }
       ];
       baseModules = [
-        {
-          nixpkgs.overlays = [
-            (final: prev: {
-              fixepub = fixepub.packages.${final.system}.default;
-            })
-          ];
-        }
+        { nixpkgs.overlays = overlays; }
         ./darwin.nix
         home-manager.darwinModules.home-manager
         {
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            sharedModules = [ syncHelper.module ];
             users.jason = import ./home.nix;
           };
           users.users.jason.home =
@@ -64,8 +61,6 @@
           specialArgs = { inherit inputs; };
         };
     in {
-      packages.${system}.syncFlakeLockFromDarwin = syncFlakeLockFromDarwin;
-
       darwinConfigurations = {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#Jasons-MacBook-Pro

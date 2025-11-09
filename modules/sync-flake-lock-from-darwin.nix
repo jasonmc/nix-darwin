@@ -51,30 +51,10 @@ let
       text = scriptText;
     };
 
-  module = { config, pkgs, lib, ... }:
-    let
-      cfg = config.programs.syncFlakeLockFromDarwin;
-    in
-    {
-      options.programs.syncFlakeLockFromDarwin = {
-        enable = lib.mkEnableOption ''
-          Install the sync-flake-lock-from-darwin helper so other flakes can pull in
-          the nix-darwin nixpkgs revision.
-        '';
-
-        package = lib.mkOption {
-          type = lib.types.package;
-          default = mkPackage pkgs;
-          defaultText = "pkgs.writeShellApplication \"sync-flake-lock-from-darwin\" …";
-          description = "Package providing the sync helper executable.";
-        };
-      };
-
-      config = lib.mkIf cfg.enable {
-        home.packages = [ cfg.package ];
-      };
-    };
+  overlay = final: prev: {
+    syncFlakeLockFromDarwin = mkPackage final;
+  };
 in
 {
-  inherit mkPackage module;
+  inherit mkPackage overlay;
 }
