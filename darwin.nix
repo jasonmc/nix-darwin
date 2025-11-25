@@ -92,6 +92,7 @@
     pkgs.rectangle
     pkgs.dysk
     pkgs.gdu
+    pkgs.age-plugin-se
   ];
 
   fonts = { packages = [ pkgs.jetbrains-mono pkgs.noto-fonts ]; };
