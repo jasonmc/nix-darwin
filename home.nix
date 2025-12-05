@@ -196,6 +196,19 @@
     '';
   };
 
+  programs.ghostty = {
+    enable = true;
+    package = pkgs.ghostty-bin;
+    enableFishIntegration = true;
+    settings = {
+      cursor-style = "block";
+      cursor-style-blink = "false";
+      shell-integration-features = "no-cursor";
+      theme = "light:Monokai Pro Light Sun,dark:Ghostty Default Style Dark";
+      quit-after-last-window-closed = true;
+    };
+  };
+
   programs.codex = {
     enable = true;
   };
