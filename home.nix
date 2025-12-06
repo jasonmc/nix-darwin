@@ -35,6 +35,8 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
 
+    pkgs.fishPlugins.grc
+    pkgs.fishPlugins.bobthefish
     pkgs.fixepub
     pkgs.syncFlakeLockFromDarwin
   ];
@@ -109,22 +111,6 @@
 
     };
     shellAliases = { moon = "${pkgs.curlMinimal}/bin/curl -s wttr.in/Moon"; };
-    plugins = [
-      {
-        name = "grc";
-        src = pkgs.fishPlugins.grc.src;
-      }
-
-      {
-        name = "bobthefish";
-        src = pkgs.fetchFromGitHub {
-          owner = "oh-my-fish";
-          repo = "theme-bobthefish";
-          rev = "e3b4d4eafc23516e35f162686f08a42edf844e40";
-          hash = "sha256-cXOYvdn74H4rkMWSC7G6bT4wa9d3/3vRnKed2ixRnuA=";
-        };
-      }
-    ];
   };
 
   programs.btop = {
