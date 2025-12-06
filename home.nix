@@ -176,7 +176,9 @@
       end
 
       return {
+         font_size = 13,
          window_background_opacity = 0.95,
+         macos_window_background_blur = 20,
          color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
       }
     '';
@@ -192,6 +194,9 @@
       shell-integration-features = "no-cursor";
       theme = "light:Monokai Pro Light Sun,dark:Ghostty Default Style Dark";
       quit-after-last-window-closed = true;
+      background-opacity = 0.95;
+      background-blur = true;
+      macos-non-native-fullscreen = true;
     };
   };
 
