@@ -26,7 +26,7 @@
       overlays = [
         syncHelper.overlay
         (final: prev: {
-          fixepub = fixepub.packages.${final.system}.default;
+          fixepub = fixepub.packages.${final.stdenv.hostPlatform.system}.default;
         })
       ];
       rosettaModules = [
