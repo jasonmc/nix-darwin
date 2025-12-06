@@ -72,7 +72,6 @@
   pkgs.starship
   pkgs.libgen-cli
   pkgs.circumflex
-  pkgs.wezterm
   pkgs.viu
   pkgs.fsrx
   pkgs.jless
@@ -90,4 +89,6 @@
   pkgs.dysk
   pkgs.gdu
   pkgs.age-plugin-se
+  pkgs.secretive
+  pkgs.vlc-bin
 ]
