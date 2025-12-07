@@ -36,7 +36,6 @@
     # '')
 
     pkgs.fishPlugins.grc
-    pkgs.fishPlugins.bobthefish
     pkgs.fixepub
     pkgs.syncFlakeLockFromDarwin
   ];
@@ -210,6 +209,12 @@
 
   programs.nix-search-tv = {
     enable = true;
+  };
+
+  programs.starship = {
+    enable = true;
+    enableFishIntegration = true;
+    settings = lib.importTOML ./starship.toml;
   };
   
 }
