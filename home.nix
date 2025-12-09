@@ -78,7 +78,12 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  programs.bat.enable = true;
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "1337";
+    };
+  };
 
   programs.eza = {
     enable = true;
