@@ -19,18 +19,17 @@
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs, nix-rosetta-builder, fixepub, ... }:
+  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs
+    , nix-rosetta-builder, fixepub, ... }:
     let
       system = "aarch64-darwin";
-      syncHelper = import ./modules/sync-flake-lock-from-darwin.nix { inherit inputs; };
-      overlays = [
-        syncHelper.overlay
-        (final: prev: {
-          fixepub = fixepub.packages.${final.stdenv.hostPlatform.system}.default;
-        })
-      ];
+      syncHelper =
+        import ./modules/sync-flake-lock-from-darwin.nix { inherit inputs; };
+      fixepubOverlay = final: _: {
+        fixepub = fixepub.packages.${final.stdenv.hostPlatform.system}.default;
+      };
+      overlays = [ syncHelper.overlay fixepubOverlay ];
       rosettaModules = [
-        # { nix.linux-builder.enable = true; }
         nix-rosetta-builder.darwinModules.default
         {
           # see available options in module.nix's `options.nix-rosetta-builder`
@@ -50,11 +49,11 @@
             useUserPackages = true;
             users.jason = import ./home.nix;
           };
-          users.users.jason.home =
-            "/Users/jason"; # https://github.com/nix-community/home-manager/issues/4026
+          # https://github.com/nix-community/home-manager/issues/4026
+          users.users.jason.home = "/Users/jason";
         }
       ];
-      mkDarwin = { extraModules ? [] }:
+      mkDarwin = { extraModules ? [ ] }:
         nix-darwin.lib.darwinSystem {
           inherit system;
           modules = baseModules ++ extraModules;
@@ -62,13 +61,13 @@
         };
     in {
       darwinConfigurations = {
-      # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#Jasons-MacBook-Pro
-      "Jasons-MacBook-Pro" = mkDarwin {extraModules = rosettaModules; };
-      "Jasons-MacBook-Pro-noRosetta" = mkDarwin {  };
+        # Build darwin flake using:
+        # $ darwin-rebuild build --flake .#Jasons-MacBook-Pro
+        "Jasons-MacBook-Pro" = mkDarwin { extraModules = rosettaModules; };
+        "Jasons-MacBook-Pro-noRosetta" = mkDarwin { };
+      };
 
       # Expose the package set, including overlays, for convenience.
       darwinPackages = self.darwinConfigurations."Jasons-MacBook-Pro".pkgs;
     };
-  };
 }
