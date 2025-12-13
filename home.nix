@@ -165,6 +165,25 @@
     };
   };
 
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    matchBlocks = {
+      "jasonmc" = {
+        host = "*.jasonmc.net *.fibo";
+        controlMaster = "auto";
+        controlPath = "~/.ssh/cm-%r@%h:%p";
+        controlPersist = "10m";
+      };
+
+      "*" = {
+        identityAgent = [
+          "/Users/jason/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh"
+        ];
+      };
+    };
+  };
+
   programs.wezterm = {
     enable = true;
 
