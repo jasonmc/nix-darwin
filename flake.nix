@@ -38,6 +38,7 @@
             onDemand = true;
           };
         }
+        ./modules/build-machines.nix
       ];
       baseModules = [
         { nixpkgs.overlays = overlays; }
