@@ -1,4 +1,10 @@
-{ config, inputs, lib, pkgs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) mkForce;
@@ -6,7 +12,8 @@ let
 
   rosettaConstants = import "${inputs.nix-rosetta-builder.outPath}/constants.nix";
   rosettaLinuxSystem =
-    builtins.replaceStrings [ "darwin" ] [ "linux" ] pkgs.stdenv.hostPlatform.system;
+    builtins.replaceStrings [ "darwin" ] [ "linux" ]
+      pkgs.stdenv.hostPlatform.system;
 in
 {
   nix.buildMachines = mkForce [

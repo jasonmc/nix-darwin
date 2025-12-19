@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -104,17 +109,19 @@
     functions = {
       fish_greeting = "";
       nxs = ''
-          test (count $argv) -eq 0; and echo "usage: nxs pkg [pkg ...]"; and return 1
-          set pkgs
-          for a in $argv
-            set pkgs $pkgs nixpkgs#$a
-          end
-          set -l names (string join " " $argv)
-          nix shell $pkgs --command env IN_NIX_SHELL=impure ANY_NIX_SHELL_PKGS="$names" $SHELL -l
+        test (count $argv) -eq 0; and echo "usage: nxs pkg [pkg ...]"; and return 1
+        set pkgs
+        for a in $argv
+          set pkgs $pkgs nixpkgs#$a
+        end
+        set -l names (string join " " $argv)
+        nix shell $pkgs --command env IN_NIX_SHELL=impure ANY_NIX_SHELL_PKGS="$names" $SHELL -l
       '';
 
     };
-    shellAliases = { moon = "${pkgs.curlMinimal}/bin/curl -s wttr.in/Moon"; };
+    shellAliases = {
+      moon = "${pkgs.curlMinimal}/bin/curl -s wttr.in/Moon";
+    };
   };
 
   programs.btop = {
@@ -133,21 +140,20 @@
         email = "me@jasonmc.net";
       };
       alias = {
-        st    = "status -sb";
-        br    = "branch";
-        co    = "checkout";
-        ci    = "commit";
-        hist  = "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short";
-        type  = "cat-file -t";
-        dump  = "cat-file -p";
-        lg1   = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all";
-        lg2   = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'";
-        lg    = "lg1";
+        st = "status -sb";
+        br = "branch";
+        co = "checkout";
+        ci = "commit";
+        hist = "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short";
+        type = "cat-file -t";
+        dump = "cat-file -p";
+        lg1 = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all";
+        lg2 = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'";
+        lg = "lg1";
       };
       init.defaultBranch = "master";
       push.default = "current";
-      core.editor =
-        "${lib.getExe' pkgs.emacs "emacsclient"} -t -a ${lib.getExe pkgs.emacs}";
+      core.editor = "${lib.getExe' pkgs.emacs "emacsclient"} -t -a ${lib.getExe pkgs.emacs}";
       merge.conflictstyle = "zdiff3";
     };
   };
@@ -240,5 +246,5 @@
     enableFishIntegration = true;
     settings = lib.importTOML ./starship.toml;
   };
-  
+
 }

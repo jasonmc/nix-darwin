@@ -3,7 +3,8 @@
 let
   selfPath = inputs.self.outPath or (builtins.toString inputs.self);
 
-  mkPackage = pkgs:
+  mkPackage =
+    pkgs:
     let
       jq = pkgs.jq;
       scriptText = ''
@@ -36,9 +37,7 @@ let
       text = scriptText;
     };
 
-  overlay = final: prev: {
-    syncFlakeLockFromDarwin = mkPackage final;
-  };
+  overlay = final: prev: { syncFlakeLockFromDarwin = mkPackage final; };
 in
 {
   inherit mkPackage overlay;

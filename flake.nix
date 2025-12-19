@@ -19,16 +19,26 @@
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs
-    , nix-rosetta-builder, fixepub, ... }:
+  outputs =
+    inputs@{
+      self,
+      nix-darwin,
+      home-manager,
+      nixpkgs,
+      nix-rosetta-builder,
+      fixepub,
+      ...
+    }:
     let
       system = "aarch64-darwin";
-      syncHelper =
-        import ./modules/sync-flake-lock-from-darwin.nix { inherit inputs; };
+      syncHelper = import ./modules/sync-flake-lock-from-darwin.nix { inherit inputs; };
       fixepubOverlay = final: _: {
         fixepub = fixepub.packages.${final.stdenv.hostPlatform.system}.default;
       };
-      overlays = [ syncHelper.overlay fixepubOverlay ];
+      overlays = [
+        syncHelper.overlay
+        fixepubOverlay
+      ];
       rosettaModules = [
         nix-rosetta-builder.darwinModules.default
         {
@@ -54,13 +64,17 @@
           users.users.jason.home = "/Users/jason";
         }
       ];
-      mkDarwin = { extraModules ? [ ] }:
+      mkDarwin =
+        {
+          extraModules ? [ ],
+        }:
         nix-darwin.lib.darwinSystem {
           inherit system;
           modules = baseModules ++ extraModules;
           specialArgs = { inherit inputs; };
         };
-    in {
+    in
+    {
       darwinConfigurations = {
         # Build darwin flake using:
         # $ darwin-rebuild build --flake .#Jasons-MacBook-Pro
