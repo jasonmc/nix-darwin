@@ -91,4 +91,5 @@
   pkgs.age-plugin-se
   pkgs.secretive
   pkgs.vlc-bin
+  pkgs.rapidraw
 ]
