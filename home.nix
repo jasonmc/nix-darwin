@@ -235,6 +235,7 @@
 
   programs.television = {
     enable = true;
+    enableFishIntegration = false;
   };
 
   programs.nix-search-tv = {
