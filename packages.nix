@@ -79,7 +79,7 @@
   pkgs.delta
   pkgs.nil
   pkgs.dua
-  pkgs.nixfmt-classic
+  pkgs.nixfmt
   pkgs.statix
   pkgs.utm
   pkgs.rectangle

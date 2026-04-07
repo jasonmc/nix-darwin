@@ -75,6 +75,8 @@
         };
     in
     {
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt;
+
       darwinConfigurations = {
         # Build darwin flake using:
         # $ darwin-rebuild build --flake .#Jasons-MacBook-Pro
