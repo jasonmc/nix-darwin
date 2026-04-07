@@ -1,9 +1,30 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
+let
+  configuredPackages = import ./packages.nix { inherit pkgs; };
+  duplicatePackageNames =
+    lib.pipe configuredPackages [
+      (map lib.getName)
+      (builtins.groupBy (name: name))
+      (lib.filterAttrs (_: names: builtins.length names > 1))
+      builtins.attrNames
+    ];
+in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = import ./packages.nix { inherit pkgs; };
+  environment.systemPackages = lib.unique configuredPackages;
+  assertions = [
+    {
+      assertion = duplicatePackageNames == [ ];
+      message = "Duplicate entries in packages.nix: ${lib.concatStringsSep ", " duplicatePackageNames}";
+    }
+  ];
 
   fonts = {
     packages = [

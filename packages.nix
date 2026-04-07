@@ -33,15 +33,12 @@
   #pkgs.oh-my-fish
   pkgs.pwgen
   pkgs.procs
-  pkgs.bottom
   pkgs.ncdu
   pkgs.yt-dlp
   pkgs.rustc
   pkgs.cargo
   pkgs.gh
-  pkgs.broot
   pkgs.texlive.combined.scheme-small
-  pkgs.nushell
   pkgs.eza
   pkgs.lsd
   pkgs.bat
