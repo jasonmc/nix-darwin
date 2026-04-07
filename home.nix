@@ -86,7 +86,9 @@
   programs.bat = {
     enable = true;
     config = {
-      theme = "1337";
+      theme = "auto:system";
+      theme-dark = "1337";
+      theme-light = "Monokai Extended Light";
     };
   };
 
@@ -108,13 +110,6 @@
     '';
     functions = {
       fish_greeting = "";
-      bat = ''
-        set -l theme 1337
-        if not defaults read -g AppleInterfaceStyle >/dev/null 2>&1
-          set theme "Monokai Extended Light"
-        end
-        command bat --theme="$theme" $argv
-      '';
       nxs = ''
         test (count $argv) -eq 0; and echo "usage: nxs pkg [pkg ...]"; and return 1
         set pkgs
