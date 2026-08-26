@@ -38,7 +38,7 @@
   pkgs.rustc
   pkgs.cargo
   pkgs.gh
-  pkgs.texlive.combined.scheme-small
+  pkgs.texliveSmall
   pkgs.eza
   pkgs.lsd
   pkgs.bat

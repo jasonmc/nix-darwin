@@ -157,12 +157,13 @@
       push.default = "current";
       core.editor = "${lib.getExe' pkgs.emacs "emacsclient"} -t -a ${lib.getExe pkgs.emacs}";
       merge.conflictstyle = "zdiff3";
+      diff.tool = "difftastic";
+      difftool.difftastic.cmd = "${lib.getExe pkgs.difftastic} $LOCAL $REMOTE";
     };
   };
 
   programs.difftastic = {
     enable = true;
-    git.diffToolMode = "difftool";
   };
 
   programs.delta = {
@@ -176,16 +177,15 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
-      "jasonmc" = {
-        host = "*.jasonmc.net *.fibo";
-        controlMaster = "auto";
-        controlPath = "~/.ssh/cm-%r@%h:%p";
-        controlPersist = "10m";
+    settings = {
+      "*.jasonmc.net *.fibo" = {
+        ControlMaster = "auto";
+        ControlPath = "~/.ssh/cm-%r@%h:%p";
+        ControlPersist = "10m";
       };
 
       "*" = {
-        identityAgent = [
+        IdentityAgent = [
           "/Users/jason/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh"
         ];
       };
