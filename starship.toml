@@ -28,6 +28,8 @@ $cmd_duration\
 $line_break\
 $character"""
 
+right_format = '${env_var.NIX_SHELL_PACKAGES}'
+
 palette = 'catppuccin_mocha'
 
 [os]
@@ -165,6 +167,9 @@ style = "bg:lavender"
 disabled = false
 show_notifications = true
 min_time_to_notify = 45000
+
+[env_var.NIX_SHELL_PACKAGES]
+format = '[$env_value](bold green)'
 
 [palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"

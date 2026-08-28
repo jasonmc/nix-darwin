@@ -102,10 +102,65 @@
     enableFishIntegration = true;
   };
 
+  programs.nix-your-shell = {
+    enable = true;
+    # Source it below so the package-label wrapper can layer on top of the
+    # generated Fish functions.
+    enableFishIntegration = false;
+  };
+
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
-      ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+      ${pkgs.nix-your-shell}/bin/nix-your-shell fish | source
+      functions --copy nix __nix_your_shell_nix
+      functions --copy nix-shell __nix_your_shell_nix_shell
+
+      function __nix_shell_package_names
+        set -l skip 0
+        set -l package_names
+
+        for arg in $argv
+          if test $skip -gt 0
+            set skip (math $skip - 1)
+          else
+            switch $arg
+              case -c --command --run
+                break
+              case --arg --argstr --override-input --option
+                set skip 2
+              case -f --file -I --include -k --keep -u --unset --store \
+                   --eval-store --system --cores -j --max-jobs \
+                   --builders --substituters --trusted-public-keys
+                set skip 1
+              case '-*'
+              case '*'
+                set -l flake_parts (string split -r -m 1 '#' -- $arg)
+                set -a package_names $flake_parts[-1]
+            end
+          end
+        end
+
+        string join ' ' $package_names
+      end
+
+      function nix
+        set -l subcommand $argv[1]
+        if test "$subcommand" = shell; or test "$subcommand" = develop
+          set -l package_names (__nix_shell_package_names $argv[2..])
+          test -n "$package_names"; or set package_names "nix $subcommand"
+          set -fx NIX_SHELL_PACKAGES (string join ' ' $NIX_SHELL_PACKAGES $package_names)
+        end
+
+        __nix_your_shell_nix $argv
+      end
+
+      function nix-shell
+        set -l package_names (__nix_shell_package_names $argv)
+        test -n "$package_names"; or set package_names nix-shell
+        set -lx NIX_SHELL_PACKAGES (string join ' ' $NIX_SHELL_PACKAGES $package_names)
+        __nix_your_shell_nix_shell $argv
+      end
 
     '';
     functions = {
@@ -116,8 +171,7 @@
         for a in $argv
           set pkgs $pkgs nixpkgs#$a
         end
-        set -l names (string join " " $argv)
-        nix shell $pkgs --command env IN_NIX_SHELL=impure ANY_NIX_SHELL_PKGS="$names" $SHELL -l
+        nix shell $pkgs
       '';
 
     };

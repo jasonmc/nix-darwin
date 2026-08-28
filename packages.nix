@@ -75,7 +75,6 @@
   pkgs.wthrr
   pkgs.grc
   pkgs.openssh
-  pkgs.any-nix-shell
   pkgs.delta
   pkgs.nil
   pkgs.dua
