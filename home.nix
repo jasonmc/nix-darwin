@@ -20,6 +20,11 @@
   # release notes.
   home.stateVersion = "24.05"; # Please read the comment before changing.
 
+  # macOS 26.3+ rejects signed application bundles with Nix's normalized
+  # timestamps. Copy apps out of the store without preserving those timestamps.
+  targets.darwin.linkApps.enable = false;
+  targets.darwin.copyApps.enable = true;
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [
@@ -277,6 +282,9 @@
       cursor-style = "block";
       cursor-style-blink = "false";
       shell-integration-features = "no-cursor";
+      notify-on-command-finish = "always";
+      notify-on-command-finish-action = "no-bell,notify";
+      notify-on-command-finish-after = "45s";
       theme = "light:Monokai Pro Light Sun,dark:Ghostty Default Style Dark";
       quit-after-last-window-closed = true;
       background-opacity = 0.95;
