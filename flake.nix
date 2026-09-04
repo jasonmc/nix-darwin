@@ -13,6 +13,16 @@
       url = "github:cpick/nix-rosetta-builder";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.darwin.follows = "nix-darwin";
+      inputs.home-manager.follows = "home-manager";
+    };
+    niks3 = {
+      url = "github:Mic92/niks3";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     fixepub = {
       url = "github:jasonmc/fixepub";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -26,6 +36,8 @@
       home-manager,
       nixpkgs,
       nix-rosetta-builder,
+      agenix,
+      niks3,
       fixepub,
       ...
     }:
@@ -53,6 +65,9 @@
       baseModules = [
         { nixpkgs.overlays = overlays; }
         ./darwin.nix
+        agenix.darwinModules.default
+        niks3.darwinModules.niks3-auto-upload
+        ./modules/niks3.nix
         home-manager.darwinModules.home-manager
         {
           home-manager = {
