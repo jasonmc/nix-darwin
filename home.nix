@@ -5,11 +5,15 @@
   ...
 }:
 
+let
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  editor = if isDarwin then pkgs.emacs else pkgs.emacs-nox;
+in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "jason";
-  home.homeDirectory = "/Users/jason";
+  home.homeDirectory = if isDarwin then "/Users/jason" else "/home/jason";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -19,11 +23,6 @@
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
   home.stateVersion = "24.05"; # Please read the comment before changing.
-
-  # macOS 26.3+ rejects signed application bundles with Nix's normalized
-  # timestamps. Copy apps out of the store without preserving those timestamps.
-  targets.darwin.linkApps.enable = false;
-  targets.darwin.copyApps.enable = true;
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -45,7 +44,10 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
 
+    pkgs.grc
     pkgs.fishPlugins.grc
+  ]
+  ++ lib.optionals isDarwin [
     pkgs.fixepub
     pkgs.syncFlakeLockFromDarwin
   ];
@@ -214,7 +216,7 @@
       };
       init.defaultBranch = "master";
       push.default = "current";
-      core.editor = "${lib.getExe' pkgs.emacs "emacsclient"} -t -a ${lib.getExe pkgs.emacs}";
+      core.editor = "${lib.getExe' editor "emacsclient"} -t -a ${lib.getExe editor}";
       merge.conflictstyle = "zdiff3";
       diff.tool = "difftastic";
       difftool.difftastic.cmd = "${lib.getExe pkgs.difftastic} $LOCAL $REMOTE";
@@ -243,7 +245,7 @@
         ControlPersist = "10m";
       };
 
-      "*" = {
+      "*" = lib.mkIf isDarwin {
         IdentityAgent = [
           "/Users/jason/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh"
         ];
@@ -251,7 +253,7 @@
     };
   };
 
-  programs.wezterm = {
+  programs.wezterm = lib.mkIf isDarwin {
     enable = true;
 
     extraConfig = ''
@@ -274,7 +276,7 @@
     '';
   };
 
-  programs.ghostty = {
+  programs.ghostty = lib.mkIf isDarwin {
     enable = true;
     package = pkgs.ghostty-bin;
     enableFishIntegration = true;
@@ -293,10 +295,6 @@
     };
   };
 
-  programs.codex = {
-    enable = true;
-  };
-
   programs.television = {
     enable = true;
     enableFishIntegration = false;
@@ -312,4 +310,10 @@
     settings = lib.importTOML ./starship.toml;
   };
 
+  # Omit Darwin-only options entirely when evaluating on Linux.
+  targets = lib.optionalAttrs isDarwin {
+    # Copy app bundles to avoid macOS rejecting Nix's normalized timestamps.
+    darwin.linkApps.enable = false;
+    darwin.copyApps.enable = true;
+  };
 }
