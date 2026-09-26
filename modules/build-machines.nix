@@ -33,7 +33,7 @@ in
     }
     {
       hostName = rosettaConstants.name;
-      maxJobs = config.nix-rosetta-builder.cores;
+      maxJobs = 2;
       protocol = "ssh-ng";
       supportedFeatures = [
         "benchmark"
