@@ -51,6 +51,7 @@ in
       IdentityAgent /Users/jason/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
       ControlMaster auto
       ControlPersist 10m
-      ControlPath /tmp/ssh-%r@%h:%p
+      # Keep user SSH sessions separate from the root Nix builder.
+      ControlPath ~/.ssh/cm-%C
   '';
 }
