@@ -44,10 +44,78 @@ in
     #   echo "Hello, ${config.home.username}!"
     # '')
 
+    editor
     pkgs.grc
     pkgs.fishPlugins.grc
+    pkgs.vim
+    pkgs.ripgrep
+    pkgs.fd
+    pkgs.curl
+    pkgs.rsync
+    pkgs.glow
+    pkgs.tig
+    pkgs.age
+    pkgs.dust
+    pkgs.pwgen
+    pkgs.procs
+    pkgs.ncdu
+    pkgs.tree
+    pkgs.wget
+    pkgs.pv
+    pkgs.gping
+    pkgs.mdcat
+    pkgs.dua
+    pkgs.dysk
+    pkgs.gdu
+    pkgs.lsd
+    pkgs.bottom
   ]
+  # Workstation development tools and desktop apps stay on the Mac.
   ++ lib.optionals isDarwin [
+    pkgs.nil
+    pkgs.statix
+    pkgs.nixfmt
+    pkgs.gron
+    pkgs.zellij
+    pkgs.qemu
+    pkgs.ripgrep-all
+    pkgs.stack
+    pkgs.xplr
+    pkgs.dotnet-sdk_8
+    pkgs.pandoc
+    pkgs.yt-dlp
+    pkgs.rustc
+    pkgs.cargo
+    pkgs.texliveSmall
+    pkgs.tor
+    pkgs.haskell-language-server
+    pkgs.nushell
+    pkgs.rust-petname
+    pkgs.httpie
+    pkgs.speedtest-cli
+    pkgs.speedtest-go
+    pkgs.nmap
+    pkgs.doctl
+    pkgs.scaleway-cli
+    pkgs.yubikey-manager
+    pkgs.fswatch
+    pkgs.aspellDicts.en
+    pkgs.aspell
+    pkgs.kalker
+    pkgs.rust-analyzer
+    pkgs.rustfmt
+    pkgs.libgen-cli
+    pkgs.circumflex
+    pkgs.viu
+    pkgs.fsrx
+    pkgs.jless
+    pkgs.wthrr
+    pkgs.utm
+    pkgs.rectangle
+    pkgs.age-plugin-se
+    pkgs.secretive
+    pkgs.vlc-bin
+    pkgs.rapidraw
     pkgs.fixepub
     pkgs.syncFlakeLockFromDarwin
   ];
@@ -85,10 +153,26 @@ in
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
+    EDITOR = lib.getExe editor;
+    VISUAL = lib.getExe editor;
   };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  programs.fzf = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  programs.zoxide = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  programs.htop.enable = true;
+  programs.tmux.enable = true;
+  programs.gh.enable = isDarwin;
 
   programs.bat = {
     enable = true;

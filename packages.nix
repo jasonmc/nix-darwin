@@ -1,91 +1,11 @@
 { pkgs }:
 
+# Machine-wide networking, login shell, and diagnostics.
 [
-  pkgs.vim
   pkgs.tailscale
-  pkgs.tmux
-  pkgs.zellij
-  pkgs.broot
-  pkgs.git
-  pkgs.fzf
   pkgs.fish
-  pkgs.qemu
-  pkgs.htop
   pkgs.mosh
-  pkgs.ripgrep
-  pkgs.ripgrep-all
-  pkgs.curl
-  pkgs.stack
-  pkgs.xplr
-  pkgs.rsync
-  pkgs.glow
-  pkgs.zoxide
-  pkgs.gping
-  pkgs.tig
-  pkgs.age
-  pkgs.dotnet-sdk_8
-  pkgs.pandoc
-  pkgs.difftastic
-  pkgs.bottom
-  pkgs.btop
-  pkgs.mdcat
-  pkgs.dust
-  #pkgs.oh-my-fish
-  pkgs.pwgen
-  pkgs.procs
-  pkgs.ncdu
-  pkgs.yt-dlp
-  pkgs.rustc
-  pkgs.cargo
-  pkgs.gh
-  pkgs.texliveSmall
-  pkgs.eza
-  pkgs.lsd
-  pkgs.bat
-  pkgs.emacs
-  pkgs.tree
-  pkgs.fd
-  pkgs.wget
-  pkgs.gron
-  pkgs.tor
-  pkgs.haskell-language-server
-  # pkgs.tealdeer
-  pkgs.nushell
-  pkgs.rust-petname
-  pkgs.httpie
-  pkgs.speedtest-cli
-  pkgs.speedtest-go
-  pkgs.nmap
-  pkgs.doctl
-  pkgs.scaleway-cli
-  pkgs.yubikey-manager
-  pkgs.pv
-  pkgs.fswatch
-  pkgs.aspellDicts.en
-  pkgs.aspell
-  pkgs.kalker
-  pkgs.rust-analyzer
-  pkgs.rustfmt
-  pkgs.starship
-  pkgs.libgen-cli
-  pkgs.circumflex
-  pkgs.viu
-  pkgs.fsrx
-  pkgs.jless
-  pkgs.wthrr
-  pkgs.grc
   pkgs.openssh
-  pkgs.delta
-  pkgs.nil
-  pkgs.dua
-  pkgs.nixfmt
-  pkgs.statix
-  pkgs.utm
-  pkgs.rectangle
-  pkgs.dysk
-  pkgs.gdu
-  pkgs.age-plugin-se
-  pkgs.secretive
-  pkgs.vlc-bin
-  pkgs.rapidraw
+  #pkgs.oh-my-fish
+  # pkgs.tealdeer
 ]
