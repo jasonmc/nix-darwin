@@ -1,22 +1,35 @@
 {
   config,
-  inputs,
-  lib,
   pkgs,
   ...
 }:
 
 let
-  inherit (lib) mkForce;
   user = config.system.primaryUser;
-
-  rosettaConstants = import "${inputs.nix-rosetta-builder.outPath}/constants.nix";
-  rosettaLinuxSystem =
-    builtins.replaceStrings [ "darwin" ] [ "linux" ]
-      pkgs.stdenv.hostPlatform.system;
 in
 {
-  nix.buildMachines = mkForce [
+  nix.linux-builder = {
+    enable = true;
+    package = pkgs.darwin.linux-builder-vz;
+    systems = [
+      "aarch64-linux"
+      "x86_64-linux"
+    ];
+    maxJobs = 2;
+    # Nested virtualization is disabled in the stock VZ guest.
+    supportedFeatures = [
+      "benchmark"
+      "big-parallel"
+    ];
+    config.virtualisation = {
+      cores = 8;
+      darwin-builder.memorySize = 6 * 1024;
+      darwin-builder.diskSize =  100 * 1024;
+    };
+  };
+
+  # Let nix-darwin add the local VM with its SSH credentials and host key.
+  nix.buildMachines = [
     {
       hostName = "athenabuilder";
       systems = [ "x86_64-linux" ];
@@ -30,18 +43,6 @@ in
         "kvm"
         "nixos-test"
       ];
-    }
-    {
-      hostName = rosettaConstants.name;
-      maxJobs = 2;
-      protocol = "ssh-ng";
-      supportedFeatures = [
-        "benchmark"
-        "big-parallel"
-        "kvm"
-        "nixos-test"
-      ];
-      systems = [ rosettaLinuxSystem ];
     }
   ];
 

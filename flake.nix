@@ -9,10 +9,6 @@
     };
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    nix-rosetta-builder = {
-      url = "github:cpick/nix-rosetta-builder";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,7 +29,6 @@
       nix-darwin,
       home-manager,
       nixpkgs,
-      nix-rosetta-builder,
       agenix,
       niks3,
       fixepub,
@@ -49,15 +44,7 @@
         syncHelper.overlay
         fixepubOverlay
       ];
-      rosettaModules = [
-        nix-rosetta-builder.darwinModules.default
-        {
-          # see available options in module.nix's `options.nix-rosetta-builder`
-          nix-rosetta-builder = {
-            enable = true;
-            onDemand = true;
-          };
-        }
+      builderModules = [
         ./modules/build-machines.nix
       ];
       baseModules = [
@@ -93,7 +80,8 @@
       darwinConfigurations = {
         # Build darwin flake using:
         # $ darwin-rebuild build --flake .#Jasons-MacBook-Pro
-        "Jasons-MacBook-Pro" = mkDarwin { extraModules = rosettaModules; };
+        "Jasons-MacBook-Pro" = mkDarwin { extraModules = builderModules; };
+        # Builder-free configuration used by the GitHub workflow.
         "Jasons-MacBook-Pro-noRosetta" = mkDarwin { };
       };
 
