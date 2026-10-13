@@ -44,12 +44,10 @@
         syncHelper.overlay
         fixepubOverlay
       ];
-      builderModules = [
-        ./modules/build-machines.nix
-      ];
       baseModules = [
         { nixpkgs.overlays = overlays; }
         ./darwin.nix
+        ./modules/build-machines.nix
         agenix.darwinModules.default
         niks3.darwinModules.niks3-auto-upload
         ./modules/niks3.nix
@@ -64,15 +62,6 @@
           users.users.jason.home = "/Users/jason";
         }
       ];
-      mkDarwin =
-        {
-          extraModules ? [ ],
-        }:
-        nix-darwin.lib.darwinSystem {
-          inherit system;
-          modules = baseModules ++ extraModules;
-          specialArgs = { inherit inputs; };
-        };
     in
     {
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt;
@@ -80,9 +69,11 @@
       darwinConfigurations = {
         # Build darwin flake using:
         # $ darwin-rebuild build --flake .#Jasons-MacBook-Pro
-        "Jasons-MacBook-Pro" = mkDarwin { extraModules = builderModules; };
-        # Builder-free configuration used by the GitHub workflow.
-        "Jasons-MacBook-Pro-noRosetta" = mkDarwin { };
+        "Jasons-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+          inherit system;
+          modules = baseModules;
+          specialArgs = { inherit inputs; };
+        };
       };
 
       # Expose the package set, including overlays, for convenience.
